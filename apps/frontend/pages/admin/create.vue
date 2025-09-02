@@ -1,31 +1,31 @@
 <template>
-  <div class="container">
-    <h1>New Post</h1>
-    <form @submit.prevent="onSubmit" class="form">
-      <label>
-        Title
-        <input v-model="title" required />
+  <div class="max-w-2xl mx-auto p-4">
+    <h1 class="text-2xl font-bold">New Post</h1>
+    <form @submit.prevent="onSubmit" class="mt-4 space-y-4">
+      <label class="block">
+        <span class="block mb-1">Title</span>
+        <BaseInput v-model="title" required />
       </label>
-      <label>
-        Content
-        <textarea v-model="content" rows="10" required></textarea>
+      <label class="block">
+        <span class="block mb-1">Content</span>
+        <textarea v-model="content" rows="10" required class="border rounded w-full px-3 py-2 focus:ring focus:border-blue-300"></textarea>
       </label>
-      <label>
-        Image URL (optional)
-        <input v-model="image_url" />
+      <label class="block">
+        <span class="block mb-1">Image URL (optional)</span>
+        <BaseInput v-model="image_url" />
       </label>
-      <label>
-        Category (optional)
-        <select v-model="category_id">
+      <label class="block">
+        <span class="block mb-1">Category (optional)</span>
+        <select v-model="category_id" class="border rounded w-full px-3 py-2 focus:ring focus:border-blue-300">
           <option :value="undefined">-- None --</option>
           <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.name }}</option>
         </select>
       </label>
-      <div class="actions">
-        <button type="submit" :disabled="loading">{{ loading ? 'Saving…' : 'Create' }}</button>
-        <NuxtLink to="/admin" class="btn-outline">Cancel</NuxtLink>
+      <div class="flex items-center gap-2">
+        <BaseButton type="submit" :disabled="loading">{{ loading ? 'Saving…' : 'Create' }}</BaseButton>
+        <NuxtLink to="/admin" class="px-4 py-2 border border-gray-900 rounded text-gray-900 hover:bg-gray-100">Cancel</NuxtLink>
       </div>
-      <p v-if="error" class="error">{{ error }}</p>
+      <p v-if="error" class="text-red-600 text-sm">{{ error }}</p>
     </form>
   </div>
 </template>
@@ -73,13 +73,3 @@ async function onSubmit() {
   }
 }
 </script>
-
-<style scoped>
-.container { max-width: 720px; margin: 0 auto; padding: 16px; }
-.form { display: grid; gap: 12px; }
-input, textarea, select { padding: 8px; }
-.actions { display: flex; gap: 8px; align-items: center; }
-.btn-outline { padding: 8px 12px; border: 1px solid #111827; border-radius: 6px; }
-.error { color: #b91c1c; }
-</style>
-

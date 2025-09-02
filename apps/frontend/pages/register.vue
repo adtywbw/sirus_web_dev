@@ -1,21 +1,21 @@
 <template>
-  <div class="container">
-    <h1>Register</h1>
-    <form @submit.prevent="onSubmit" class="form">
-      <label>
-        Username
-        <input v-model="username" required />
+  <div class="max-w-md mx-auto p-4">
+    <h1 class="text-2xl font-bold">Register</h1>
+    <form @submit.prevent="onSubmit" class="mt-4 space-y-4">
+      <label class="block">
+        <span class="block mb-1">Username</span>
+        <BaseInput v-model="username" required />
       </label>
-      <label>
-        Email
-        <input v-model="email" type="email" required />
+      <label class="block">
+        <span class="block mb-1">Email</span>
+        <BaseInput v-model="email" type="email" required />
       </label>
-      <label>
-        Password
-        <input v-model="password" type="password" required />
+      <label class="block">
+        <span class="block mb-1">Password</span>
+        <BaseInput v-model="password" type="password" required />
       </label>
-      <button :disabled="loading" type="submit">{{ loading ? 'Registering…' : 'Register' }}</button>
-      <p v-if="error" class="error">{{ error }}</p>
+      <BaseButton :disabled="loading" type="submit" class="w-full">{{ loading ? 'Registering…' : 'Register' }}</BaseButton>
+      <p v-if="error" class="text-red-600 text-sm">{{ error }}</p>
     </form>
   </div>
 </template>
@@ -58,13 +58,3 @@ async function onSubmit() {
   }
 }
 </script>
-
-<style scoped>
-.container { max-width: 420px; margin: 0 auto; padding: 16px; }
-.form { display: grid; gap: 12px; margin-top: 12px; }
-label { display: grid; gap: 4px; }
-input { padding: 8px; }
-button { padding: 10px; }
-.error { color: #b91c1c; }
-</style>
-
