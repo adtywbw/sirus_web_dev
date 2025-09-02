@@ -1,30 +1,30 @@
 <template>
-  <div class="container">
-    <h1>Admin Dashboard</h1>
-    <div class="topbar">
-      <NuxtLink to="/admin/create" class="btn">+ New Post</NuxtLink>
-      <button class="btn-outline" @click="logout()">Logout</button>
+  <div class="max-w-4xl mx-auto p-4">
+    <h1 class="text-2xl font-bold">Admin Dashboard</h1>
+    <div class="flex gap-2 items-center mt-3 mb-4">
+      <NuxtLink to="/admin/create" class="px-3 py-2 bg-gray-900 text-white rounded">+ New Post</NuxtLink>
+      <button class="px-3 py-2 border border-gray-900 text-gray-900 rounded" @click="logout()">Logout</button>
     </div>
 
     <div v-if="loading">Loading posts…</div>
     <div v-else>
-      <table class="table" v-if="posts.length">
+      <table class="w-full border-collapse" v-if="posts.length">
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Created</th>
-            <th></th>
+            <th class="text-left border-b border-gray-200 p-2">Title</th>
+            <th class="text-left border-b border-gray-200 p-2">Author</th>
+            <th class="text-left border-b border-gray-200 p-2">Created</th>
+            <th class="text-left border-b border-gray-200 p-2"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="p in posts" :key="p.id">
-            <td>{{ p.title }}</td>
-            <td>{{ p.author.username }}</td>
-            <td>{{ new Date(p.created_at).toLocaleString() }}</td>
-            <td class="actions">
-              <NuxtLink :to="`/admin/edit/${p.id}`">Edit</NuxtLink>
-              <button @click="onDelete(p.id)">Delete</button>
+            <td class="border-b border-gray-200 p-2">{{ p.title }}</td>
+            <td class="border-b border-gray-200 p-2">{{ p.author.username }}</td>
+            <td class="border-b border-gray-200 p-2">{{ new Date(p.created_at).toLocaleString() }}</td>
+            <td class="border-b border-gray-200 p-2 flex gap-2">
+              <NuxtLink :to="`/admin/edit/${p.id}`" class="text-blue-600">Edit</NuxtLink>
+              <button @click="onDelete(p.id)" class="text-red-600">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -32,7 +32,7 @@
       <div v-else>No posts yet.</div>
     </div>
   </div>
-  
+
 </template>
 
 <script setup lang="ts">
@@ -74,13 +74,4 @@ async function onDelete(id: string) {
 onMounted(fetchPosts);
 </script>
 
-<style scoped>
-.container { max-width: 960px; margin: 0 auto; padding: 16px; }
-.topbar { display: flex; gap: 8px; align-items: center; margin: 12px 0 16px; }
-.btn, .btn-outline { padding: 8px 12px; }
-.btn { background: #111827; color: white; border-radius: 6px; }
-.btn-outline { background: transparent; color: #111827; border: 1px solid #111827; border-radius: 6px; }
-.table { width: 100%; border-collapse: collapse; }
-th, td { text-align: left; border-bottom: 1px solid #e5e7eb; padding: 8px; }
-.actions { display: flex; gap: 8px; }
-</style>
+

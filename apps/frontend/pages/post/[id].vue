@@ -1,10 +1,15 @@
 <template>
-  <div class="container" v-if="post">
-    <NuxtLink to="/">← Back</NuxtLink>
-    <h1>{{ post.title }}</h1>
-    <p class="meta">By {{ post.author.username }} — {{ new Date(post.created_at).toLocaleString() }}</p>
-    <img v-if="post.image_url" :src="post.image_url" alt="cover" />
-    <article class="content" v-html="contentHtml"></article>
+  <div class="max-w-3xl mx-auto p-4" v-if="post">
+    <NuxtLink to="/" class="text-blue-600">← Back</NuxtLink>
+    <h1 class="text-3xl font-bold">{{ post.title }}</h1>
+    <p class="text-gray-600 mt-2 mb-4">By {{ post.author.username }} — {{ new Date(post.created_at).toLocaleString() }}</p>
+    <img
+      v-if="post.image_url"
+      :src="post.image_url"
+      alt="cover"
+      class="w-full max-h-96 object-cover rounded-md my-3"
+    />
+    <article class="leading-relaxed text-gray-900" v-html="contentHtml"></article>
   </div>
 </template>
 
@@ -36,10 +41,5 @@ onMounted(async () => {
 const contentHtml = computed(() => post.value?.content?.replace(/\n/g, '<br/>') ?? '');
 </script>
 
-<style scoped>
-.container { max-width: 720px; margin: 0 auto; padding: 16px; }
-.meta { color: #6b7280; margin: 8px 0 16px; }
-img { width: 100%; max-height: 360px; object-fit: cover; border-radius: 6px; margin: 12px 0; }
-.content { line-height: 1.7; color: #111827; }
-</style>
+
 

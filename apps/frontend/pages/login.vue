@@ -1,18 +1,18 @@
 <template>
-  <div class="container">
-    <h1>Login</h1>
-    <form @submit.prevent="onSubmit" class="form">
-      <label>
+  <div class="max-w-md mx-auto p-4">
+    <h1 class="text-2xl font-bold">Login</h1>
+    <form @submit.prevent="onSubmit" class="grid gap-3 mt-3">
+      <label class="grid gap-1">
         Username
-        <input v-model="username" required />
+        <input v-model="username" required class="p-2 border rounded" />
       </label>
-      <label>
+      <label class="grid gap-1">
         Password
-        <input v-model="password" type="password" required />
+        <input v-model="password" type="password" required class="p-2 border rounded" />
       </label>
-      <button :disabled="loading" type="submit">{{ loading ? 'Signing in…' : 'Login' }}</button>
-      <NuxtLink to="/register" class="link">Need an account? Register</NuxtLink>
-      <p v-if="error" class="error">{{ error }}</p>
+      <button :disabled="loading" type="submit" class="py-2 px-3 bg-gray-900 text-white rounded">{{ loading ? 'Signing in…' : 'Login' }}</button>
+      <NuxtLink to="/register" class="inline-block mt-2 text-blue-600">Need an account? Register</NuxtLink>
+      <p v-if="error" class="text-red-700">{{ error }}</p>
     </form>
   </div>
 </template>
@@ -55,12 +55,4 @@ async function onSubmit() {
 }
 </script>
 
-<style scoped>
-.container { max-width: 420px; margin: 0 auto; padding: 16px; }
-.form { display: grid; gap: 12px; margin-top: 12px; }
-label { display: grid; gap: 4px; }
-input { padding: 8px; }
-button { padding: 10px; }
-.error { color: #b91c1c; }
-.link { display: inline-block; margin-top: 8px; }
-</style>
+

@@ -1,25 +1,25 @@
 <template>
-  <div class="container">
-    <header class="hero">
-      <h1>Personal Blog</h1>
+  <div class="max-w-4xl mx-auto p-4">
+    <header class="mt-4 mb-6">
+      <h1 class="text-2xl font-bold">Personal Blog</h1>
       <p>Welcome! Read the latest posts.</p>
     </header>
 
-    <div class="actions">
-      <input v-model="keyword" placeholder="Search posts..." />
-      <select v-model="categoryId">
+    <div class="flex gap-2 mb-4">
+      <input v-model="keyword" placeholder="Search posts..." class="flex-1 p-2 border rounded" />
+      <select v-model="categoryId" class="p-2 border rounded">
         <option :value="''">All categories</option>
         <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.name }}</option>
       </select>
-      <button @click="refetch()">Search</button>
-      <NuxtLink to="/login" class="login-link">Admin</NuxtLink>
+      <button @click="refetch()" class="px-3 py-2 bg-gray-900 text-white rounded">Search</button>
+      <NuxtLink to="/login" class="ml-auto self-center no-underline text-gray-900">Admin</NuxtLink>
     </div>
 
     <section>
       <div v-if="loading">Loading...</div>
       <div v-else>
         <div v-if="!posts.length">No posts yet.</div>
-        <div class="grid">
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4">
           <PostCard v-for="p in posts" :key="p.id" :post="p" />
         </div>
       </div>
@@ -72,13 +72,4 @@ onMounted(async () => {
 const refetch = fetchPosts;
 </script>
 
-<style scoped>
-.container { max-width: 960px; margin: 0 auto; padding: 16px; }
-.hero { margin: 16px 0 24px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-.actions { display: flex; gap: 8px; margin-bottom: 16px; }
-input { flex: 1; padding: 8px; }
-select { padding: 8px; }
-button { padding: 8px 12px; }
-.login-link { margin-left: auto; align-self: center; }
-</style>
+

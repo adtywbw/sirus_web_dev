@@ -1,6 +1,7 @@
 // Nuxt 3 configuration for the Personal Blog frontend
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  css: ['~/assets/css/tailwind.css'],
   app: {
     head: {
       title: 'Personal Blog',
