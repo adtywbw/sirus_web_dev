@@ -12,6 +12,23 @@ This repository scaffolds a full‑stack personal blog per the SRS:
 - `apps/frontend`: Nuxt 3 frontend
 - `docker-compose.yml`: Local Postgres + Adminer
 
+## Docker
+
+Run the entire stack with Docker:
+
+```
+docker compose up --build
+```
+
+Services:
+- Backend: http://localhost:4000/graphql
+- Frontend: http://localhost:3000
+- Adminer: http://localhost:8080 (System: PostgreSQL, Server: db, User: postgres, Password: postgres, DB: blog)
+
+Environment (overridable in compose):
+- Backend: `DATABASE_URL=postgres://postgres:postgres@db:5432/blog`, `JWT_SECRET=supersecretjwt`
+- Frontend: `NUXT_PUBLIC_GRAPHQL_ENDPOINT=http://backend:4000/graphql`
+
 ## Quickstart
 
 Prerequisites:

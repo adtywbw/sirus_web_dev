@@ -16,6 +16,33 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+  backend:
+    build:
+      context: ./apps/backend
+    container_name: blog_backend
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgres://postgres:postgres@db:5432/blog
+      JWT_SECRET: supersecretjwt
+    ports:
+      - "4000:4000"
+    depends_on:
+      db:
+        condition: service_healthy
+  frontend:
+    build:
+      context: ./apps/frontend
+    container_name: blog_frontend
+    environment:
+      NODE_ENV: production
+      NUXT_PUBLIC_GRAPHQL_ENDPOINT: http://backend:4000/graphql
+      NITRO_PORT: 3000
+      NITRO_HOST: 0.0.0.0
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
   adminer:
     image: adminer:4
     ports:

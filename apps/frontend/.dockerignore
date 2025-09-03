@@ -1,0 +1,9 @@
+node_modules
+.nuxt
+.output
+npm-debug.log*
+.npmrc
+.git
+.gitignore
+.DS_Store
+.env*
