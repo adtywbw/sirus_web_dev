@@ -1,0 +1,7 @@
+feat(docker): add full Docker setup for backend and frontend
+
+- Add backend Dockerfile with auto DB migrations on start
+- Add frontend Dockerfile (Nuxt 3 build + Nitro runner)
+- Extend docker-compose with backend, frontend, adminer, postgres
+- Add .dockerignore files for lean images
+- Update README with Docker run instructions
