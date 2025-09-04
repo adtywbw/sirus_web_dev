@@ -1,6 +1,9 @@
 // Nuxt 3 configuration for the Personal Blog frontend
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  css: [
+    '~/assets/css/main.css'
+  ],
   app: {
     head: {
       title: 'Personal Blog',
@@ -16,4 +19,3 @@ export default defineNuxtConfig({
     }
   }
 });
-

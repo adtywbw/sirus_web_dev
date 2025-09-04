@@ -4,7 +4,7 @@
     :type="props.type"
     :value="props.modelValue"
     @input="onInput"
-    class="border rounded w-full px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+    class="input"
   />
 </template>
 

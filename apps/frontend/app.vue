@@ -5,5 +5,5 @@
 </template>
 
 <style>
-body { background: #f9fafb; }
+/* Global styles are in assets/css/main.css */
 </style>
