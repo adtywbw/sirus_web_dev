@@ -9,31 +9,24 @@
 </template>
 
 <script setup lang="ts">
-import { gql } from '@apollo/client/core';
+import type { Post } from '~/types';
+import { POST } from '~/graphql/queries';
+import DOMPurify from 'dompurify';
 
 const route = useRoute();
 const nuxtApp = useNuxtApp();
-const post = ref<any | null>(null);
-
-const query = gql`
-  query Post($id: ID!) {
-    post(id: $id) {
-      id
-      title
-      content
-      image_url
-      created_at
-      author { id username }
-    }
-  }
-`;
+const post = ref<Post | null>(null);
 
 onMounted(async () => {
-  const { data } = await nuxtApp.$apollo.query({ query, variables: { id: route.params.id } });
+  const { data } = await nuxtApp.$apollo.query({ query: POST, variables: { id: route.params.id } });
   post.value = data?.post ?? null;
 });
 
-const contentHtml = computed(() => post.value?.content?.replace(/\n/g, '<br/>') ?? '');
+const contentHtml = computed(() => {
+  if (!post.value?.content) return '';
+  const html = post.value.content.replace(/\n/g, '<br/>');
+  return DOMPurify.sanitize(html);
+});
 </script>
 
 <style scoped>

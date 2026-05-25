@@ -18,18 +18,9 @@
 </template>
 
 <script setup lang="ts">
-import { gql } from '@apollo/client/core';
+import { LOGIN } from '~/graphql/queries';
 
 definePageMeta({ middleware: [] });
-
-const LOGIN = gql`
-  mutation Login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      token
-      user { id username }
-    }
-  }
-`;
 
 const username = ref('');
 const password = ref('');
@@ -47,8 +38,8 @@ async function onSubmit() {
     if (!token) throw new Error('Invalid response');
     setToken(token);
     await navigateTo('/admin');
-  } catch (e: any) {
-    error.value = e?.message || 'Login failed';
+  } catch (e: unknown) {
+    error.value = e instanceof Error ? e.message : 'Login failed';
   } finally {
     loading.value = false;
   }

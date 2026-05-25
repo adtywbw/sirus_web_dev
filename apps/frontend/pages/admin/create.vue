@@ -31,24 +31,18 @@
 </template>
 
 <script setup lang="ts">
-import { gql } from '@apollo/client/core';
+import type { Category } from '~/types';
+import { CATEGORIES, CREATE_POST } from '~/graphql/queries';
 
 definePageMeta({ middleware: ['auth'] });
 
 const nuxtApp = useNuxtApp();
 
-const CATEGORIES = gql`query { categories { id name } }`;
-const CREATE_POST = gql`
-  mutation Create($input: PostInput!) {
-    createPost(input: $input) { id }
-  }
-`;
-
 const title = ref('');
 const content = ref('');
 const image_url = ref('');
 const category_id = ref<string | undefined>(undefined);
-const categories = ref<any[]>([]);
+const categories = ref<Category[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
 
@@ -66,8 +60,8 @@ async function onSubmit() {
       variables: { input: { title: title.value, content: content.value, image_url: image_url.value || null, category_id: category_id.value || null } }
     });
     await navigateTo('/admin');
-  } catch (e: any) {
-    error.value = e?.message || 'Failed to create post';
+  } catch (e: unknown) {
+    error.value = e instanceof Error ? e.message : 'Failed to create post';
   } finally {
     loading.value = false;
   }

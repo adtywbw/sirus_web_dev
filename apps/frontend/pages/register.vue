@@ -21,18 +21,9 @@
 </template>
 
 <script setup lang="ts">
-import { gql } from '@apollo/client/core';
+import { REGISTER } from '~/graphql/queries';
 
 definePageMeta({ middleware: [] });
-
-const REGISTER = gql`
-  mutation Register($username: String!, $email: String!, $password: String!) {
-    register(username: $username, email: $email, password: $password) {
-      token
-      user { id username }
-    }
-  }
-`;
 
 const username = ref('');
 const email = ref('');
@@ -51,8 +42,8 @@ async function onSubmit() {
     if (!token) throw new Error('Invalid response');
     setToken(token);
     await navigateTo('/admin');
-  } catch (e: any) {
-    error.value = e?.message || 'Registration failed';
+  } catch (e: unknown) {
+    error.value = e instanceof Error ? e.message : 'Registration failed';
   } finally {
     loading.value = false;
   }

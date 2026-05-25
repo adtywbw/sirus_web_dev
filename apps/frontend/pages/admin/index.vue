@@ -36,29 +36,20 @@
 </template>
 
 <script setup lang="ts">
-import { gql } from '@apollo/client/core';
+import type { Post } from '~/types';
+import { POSTS_ADMIN, DELETE_POST } from '~/graphql/queries';
 
 definePageMeta({ middleware: ['auth'] });
 
-const POSTS = gql`
-  query PostsAdmin {
-    posts { id title created_at author { id username } }
-  }
-`;
-
-const DELETE_POST = gql`
-  mutation DeletePost($id: ID!) { deletePost(id: $id) }
-`;
-
 const nuxtApp = useNuxtApp();
-const posts = ref<any[]>([]);
+const posts = ref<Post[]>([]);
 const loading = ref(false);
 const { logout } = useAuth();
 
 async function fetchPosts() {
   loading.value = true;
   try {
-    const { data } = await nuxtApp.$apollo.query({ query: POSTS, fetchPolicy: 'no-cache' });
+    const { data } = await nuxtApp.$apollo.query({ query: POSTS_ADMIN, fetchPolicy: 'no-cache' });
     posts.value = data?.posts ?? [];
   } finally {
     loading.value = false;
@@ -67,8 +58,12 @@ async function fetchPosts() {
 
 async function onDelete(id: string) {
   if (!confirm('Delete this post?')) return;
-  await nuxtApp.$apollo.mutate({ mutation: DELETE_POST, variables: { id } });
-  await fetchPosts();
+  try {
+    await nuxtApp.$apollo.mutate({ mutation: DELETE_POST, variables: { id } });
+    await fetchPosts();
+  } catch (e: unknown) {
+    if (e instanceof Error) alert(e.message);
+  }
 }
 
 onMounted(fetchPosts);

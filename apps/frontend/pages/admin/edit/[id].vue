@@ -31,21 +31,18 @@
 </template>
 
 <script setup lang="ts">
-import { gql } from '@apollo/client/core';
+import type { Category } from '~/types';
+import { POST, CATEGORIES, UPDATE_POST } from '~/graphql/queries';
 
 definePageMeta({ middleware: ['auth'] });
 const route = useRoute();
 const nuxtApp = useNuxtApp();
 
-const POST = gql`query ($id: ID!) { post(id:$id){ id title content image_url category { id } } }`;
-const CATEGORIES = gql`query { categories { id name } }`;
-const UPDATE_POST = gql`mutation ($id: ID!, $input: PostUpdateInput!) { updatePost(id:$id, input:$input){ id } }`;
-
 const title = ref('');
 const content = ref('');
 const image_url = ref('');
 const category_id = ref<string | undefined>(undefined);
-const categories = ref<any[]>([]);
+const categories = ref<Category[]>([]);
 const loading = ref(false);
 const loaded = ref(false);
 const error = ref<string | null>(null);
@@ -70,15 +67,15 @@ async function onSubmit() {
   loading.value = true;
   error.value = null;
   try {
-    const input: any = {};
+    const input: Record<string, unknown> = {};
     if (title.value) input.title = title.value;
     if (content.value) input.content = content.value;
     input.image_url = image_url.value || null;
     input.category_id = category_id.value || null;
     await nuxtApp.$apollo.mutate({ mutation: UPDATE_POST, variables: { id: route.params.id, input } });
     await navigateTo('/admin');
-  } catch (e: any) {
-    error.value = e?.message || 'Failed to update post';
+  } catch (e: unknown) {
+    error.value = e instanceof Error ? e.message : 'Failed to update post';
   } finally {
     loading.value = false;
   }

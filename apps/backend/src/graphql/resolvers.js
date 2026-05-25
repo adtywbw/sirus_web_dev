@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { pool } = require('../db/pool');
 
+const JWT_SECRET = process.env.JWT_SECRET;
+
 const asUser = (ctx) => {
   if (!ctx.user) throw new Error('Unauthorized');
   return ctx.user;
@@ -84,16 +86,16 @@ const resolvers = {
         [username, email, hash]
       );
       const user = rows[0];
-      const token = jwt.sign({ id: user.id, username }, process.env.JWT_SECRET || '', { expiresIn: '7d' });
+      const token = jwt.sign({ id: user.id, username }, JWT_SECRET, { expiresIn: '7d' });
       return { token, user };
     },
     login: async (_p, { username, password }) => {
-      const { rows } = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+      const { rows } = await pool.query('SELECT id, username, email, password_hash, created_at FROM users WHERE username = $1', [username]);
       const user = rows[0];
       if (!user) throw new Error('Invalid credentials');
       const ok = await bcrypt.compare(password, user.password_hash);
       if (!ok) throw new Error('Invalid credentials');
-      const token = jwt.sign({ id: user.id, username }, process.env.JWT_SECRET || '', { expiresIn: '7d' });
+      const token = jwt.sign({ id: user.id, username }, JWT_SECRET, { expiresIn: '7d' });
       return { token, user: { id: user.id, username: user.username, email: user.email, created_at: user.created_at } };
     },
     createPost: async (_p, { input }, ctx) => {
@@ -108,7 +110,10 @@ const resolvers = {
       return (await resolvers.Query.post(null, { id: post.id })) || post;
     },
     updatePost: async (_p, { id, input }, ctx) => {
-      asUser(ctx);
+      const user = asUser(ctx);
+      const { rows: existing } = await pool.query('SELECT author_id FROM blog_posts WHERE id = $1', [id]);
+      if (!existing.length) throw new Error('Post not found');
+      if (existing[0].author_id !== user.id) throw new Error('Forbidden');
       const fields = [];
       const values = [];
       let i = 1;
@@ -122,7 +127,10 @@ const resolvers = {
       return resolvers.Query.post(null, { id });
     },
     deletePost: async (_p, { id }, ctx) => {
-      asUser(ctx);
+      const user = asUser(ctx);
+      const { rows: existing } = await pool.query('SELECT author_id FROM blog_posts WHERE id = $1', [id]);
+      if (!existing.length) throw new Error('Post not found');
+      if (existing[0].author_id !== user.id) throw new Error('Forbidden');
       await pool.query('DELETE FROM blog_posts WHERE id = $1', [id]);
       return true;
     },

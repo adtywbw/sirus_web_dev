@@ -8,8 +8,9 @@
     "start": "nuxt start"
   },
   "dependencies": {
-    "nuxt": "^3.12.0",
     "@apollo/client": "^3.10.0",
-    "graphql": "^16.8.1"
+    "dompurify": "^3.4.5",
+    "graphql": "^16.8.1",
+    "nuxt": "^3.12.0"
   }
 }

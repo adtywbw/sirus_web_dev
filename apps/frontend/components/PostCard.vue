@@ -14,7 +14,9 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ post: any }>();
+import type { Post } from '~/types';
+
+const props = defineProps<{ post: Post }>();
 const excerpt = computed(() => {
   const txt = (props.post.content || '').replace(/\s+/g, ' ').trim();
   if (!txt) return '';

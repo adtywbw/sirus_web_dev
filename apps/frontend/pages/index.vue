@@ -27,36 +27,24 @@
 </template>
 
 <script setup lang="ts">
-import { gql } from '@apollo/client/core';
+import type { Post, Category } from '~/types';
+import { POSTS, CATEGORIES } from '~/graphql/queries';
 import PostCard from '~/components/PostCard.vue';
 
-const query = gql`
-  query Posts($keyword: String, $category_id: ID) {
-    posts(keyword: $keyword, category_id: $category_id) {
-      id
-      title
-      content
-      image_url
-      created_at
-      author { id username }
-    }
-  }
-`;
-const CATEGORIES = gql`query { categories { id name } }`;
-
 const keyword = ref('');
-const posts = ref<any[]>([]);
+const posts = ref<Post[]>([]);
 const loading = ref(false);
 const nuxtApp = useNuxtApp();
-const categories = ref<any[]>([]);
+const categories = ref<Category[]>([]);
 const categoryId = ref('');
 
 async function fetchPosts() {
   loading.value = true;
   try {
-    const variables: any = { keyword: keyword.value };
+    const variables: { keyword?: string; category_id?: string } = {};
+    if (keyword.value) variables.keyword = keyword.value;
     if (categoryId.value) variables.category_id = categoryId.value;
-    const { data } = await nuxtApp.$apollo.query({ query, variables });
+    const { data } = await nuxtApp.$apollo.query({ query: POSTS, variables });
     posts.value = data?.posts ?? [];
   } finally {
     loading.value = false;
